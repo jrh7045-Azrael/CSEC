@@ -1,0 +1,51 @@
+version: "3"
+services:
+  blog1-db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: blog1db
+      MYSQL_USER: blog1-db-user
+      MYSQL_PASSWORD: blog1password
+    networks:
+      - blog1-net
+  blog1:
+    depends_on:
+      - blog1-db
+    image: wordpress
+    ports:
+      - "8000:80"
+    environment:
+      WORDPRESS_DB_HOST: blog1-db:3306
+      WORDPRESS_DB_USER: blog1-db-user
+      WORDPRESS_DB_PASSWORD: blog1password
+      WORDPRESS_DB_NAME: blog1db
+    networks:
+      - blog1-net
+  blog2-db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: blog2db
+      MYSQL_USER: blog2-db-user
+      MYSQL_PASSWORD: blog2password
+    networks:
+      - blog2-net
+  blog2:
+    depends_on:
+      - blog2-db
+    image: wordpress
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: blog2-db:3306
+      WORDPRESS_DB_USER: blog2-db-user
+      WORDPRESS_DB_PASSWORD: blog2password
+      WORDPRESS_DB_NAME: blog2db
+    networks:
+      - blog2-net
+networks:
+  blog1-net:
+    driver: bridge
+  blog2-net:
+    driver: bridge
